@@ -1,18 +1,22 @@
 # Finite-state Building Blocks Manual
 
-[Concepts](#Concepts)
+--------------------------------------------
 
-[Base FSM class](#FSM)
+## Table of content
 
-[Registry](#Registry)
+* [Concepts](#concepts)
+* [Base FSM class](#base-fsm-class)
+* [Registry](#registry)
+* [Containers](#containers)
+  * [Single-state container](#single-state-container)
+  * [Stacked-state container](#stacked-state-container)
+* [Manipulators](#manipulators)
+  * [Single-state manipulators](#single-state-manipulators)
+  * [Stacked-state manipulators](#stacked-state-manipulators)
+* [Enter/Exit Policies](#enter-exit-policies)
+* [Examples](#examples)
 
-[Containers](#Containers)
-
-[Manipulators](#Manipulators)
-
-[Enter/Exit Policies](#Policies)
-
-[Examples](#Examples)
+--------------------------------------------
 
 ## Concepts
 
@@ -38,7 +42,7 @@ State ID is any C++ type that uniquely identifies a state. In most cases, this i
 
 This is a type that represents a state of a state machine. It can be something simple, like an int, but in most cases, it will probably be a pointer to a state class that encapsulates behaviour for this state.
 
-State Type does not have a contract it should follow by default, but Enter/Exit Policy can impose such a contract on State Type (see [Enter/Exit Policies](#policies)).
+State Type does not have a contract it should follow by default, but Enter/Exit Policy can impose such a contract on State Type (see [Enter/Exit Policies](#enter-exit-policies)).
 
 If State Type is a class or a struct, but not a pointer, it should be copyable.
 
@@ -76,7 +80,7 @@ For examples of context, see [Examples](#examples) section of this manual.
 
 -----------------------------------------------------
 
-## FSM
+## Base FSM class
 
 **fsbb:fsm** is a base class for finite-state machines constructed using FSBB. You can construct your own machines without using it, or you can inherit from it to extend its functionality if you need to.
 
@@ -100,14 +104,14 @@ class fsm :
 This class do not provide any methods by itself, but instead serves as framework into which various building blocks can be inserted.
 
 **Parameters:**
-* **t_state_id** - type of [State ID](#State ID) used by this machine
-* **t_state** - [State Type](#State Type) used by this machine
-* **t_state_container_interface** - [State Container](#State Container) uses by this machine (see [Containers](#Containers))
-* **t_state_manipulator_interface** - [State Manipulator](#State Manipulator) uses by this machine (see [Manipulators](#Manipulators))
+* **t_state_id** - type of [State ID](#state-id) used by this machine
+* **t_state** - [State Type](#state-type) used by this machine
+* **t_state_container_interface** - [State Container](#state-container) uses by this machine (see [Containers](#containers))
+* **t_state_manipulator_interface** - [State Manipulator](#state-manipulator) uses by this machine (see [Manipulators](#manipulators))
 
 ## Registry
 
-[State Registry](State Registry) stores possible states for a state machine. It uses class **fsbb::state_and_id**:
+[State Registry](state-registry) stores possible states for a state machine. It uses class **fsbb::state_and_id**:
 
 ```c++
 template
@@ -155,7 +159,7 @@ Finds previously registred state. If no state is found, returns 0.
 
 FSBB provides two types of containers for building state machines: single-state and stacked-state container. In reality, stacked-state does not really uses a stack, but rather just an array of states with random access for insertation/removal of members.
 
-### Single-state container:
+### Single-state container
 
 ```c++
 #include "fsbb_single.hpp"
@@ -179,7 +183,7 @@ class state_container_single_interface
 
 **```state_container_single_interface( t_impl& impl )```**
 
-Initializes container interface with a container implementation. The base [FSM](#FSM) class takes care of this automatically.
+Initializes container interface with a container implementation. The base [FSM](#base-fsm-class) class takes care of this automatically.
 
 **Methods:**
 
@@ -194,7 +198,7 @@ Returns the current state.
 TODO: If there is no current state, presently it returns 0. This will not work for any state type.
 
 
-### Stacked-state container:
+### Stacked-state container
 
 ```c++
 #include "fsbb_stacked.hpp"
@@ -224,7 +228,7 @@ public:
 
 **```state_container_stacked_interface( t_impl& impl )```**
 
-Initializes container interface with a container implementation. The base [FSM](#FSM) class takes care of this automatically.
+Initializes container interface with a container implementation. The base [FSM](#base-fsm-class) class takes care of this automatically.
 
 **Methods:**
 
@@ -291,7 +295,7 @@ public:
 
 **```state_manipulator_single_immediate_interface( t_impl& impl )```**
 
-Initializes manipulator interface with a manipulator implementation. The base [FSM](#FSM) class takes care of this automatically.
+Initializes manipulator interface with a manipulator implementation. The base [FSM](#base-fsm-class) class takes care of this automatically.
 
 **Methods:**
 
@@ -327,7 +331,7 @@ public:
 
 **```state_manipulator_single_queued_interface( t_impl& impl )```**
 
-Initializes manipulator interface with a manipulator implementation. The base [FSM](#FSM) class takes care of this automatically.
+Initializes manipulator interface with a manipulator implementation. The base [FSM](#base-fsm-class) class takes care of this automatically.
 
 **Methods:**
 
@@ -364,11 +368,11 @@ public:
 
 **```state_manipulator_single_combined_interface( t_impl& impl )```**
 
-Initializes manipulator interface with a manipulator implementation. The base [FSM](#FSM) class takes care of this automatically.
+Initializes manipulator interface with a manipulator implementation. The base [FSM](#base-fsm-class) class takes care of this automatically.
 
 **Methods:**
 
-Combined manipulator provides methods from both [immediate](#immediate-single-state-manipulator) and [queued](#Queued-single-state-manipulator) state manipulators.
+Combined manipulator provides methods from both [immediate](#immediate-single-state-manipulator) and [queued](#queued-single-state-manipulator) state manipulators.
 
 ### Stacked-state manipulators
 
@@ -401,7 +405,7 @@ public:
 
 **```state_manipulator_stacked_immediate_interface( t_impl& impl )```**
 
-Initializes manipulator interface with a manipulator implementation. The base [FSM](#FSM) class takes care of this automatically.
+Initializes manipulator interface with a manipulator implementation. The base [FSM](#base-fsm-class) class takes care of this automatically.
 
 **Methods:**
 
@@ -473,7 +477,7 @@ Also, unlike immediate manipulator, this interface's methods do not return anyth
         t_impl& impl 
     );```**
 
-Initializes manipulator interface with a manipulator implementation. The base [FSM](#FSM) class takes care of this automatically.
+Initializes manipulator interface with a manipulator implementation. The base [FSM](#base-fsm-class) class takes care of this automatically.
 
 **Methods:**
 
@@ -526,13 +530,13 @@ public:
 
 **```state_manipulator_stacked_combined_interface( t_impl& impl )```**
 
-Initializes manipulator interface with a manipulator implementation. The base [FSM](#FSM) class takes care of this automatically.
+Initializes manipulator interface with a manipulator implementation. The base [FSM](#base-fsm-class) class takes care of this automatically.
 
 **Methods:**
 
 Combined manipulator provides methods from both [immediate](#immediate-stacked-state-manipulator) and [queued](#queued-stacked-state-manipulator) state manipulators.
 
-## Policies
+## Enter/Exit Policies
 
 Enter/Exit policies are implemented as a class which provides two static functions:
 

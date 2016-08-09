@@ -27,12 +27,17 @@ template
 class state_registry
 {
 public:
-    void register_state( t_state_id id, t_state state )
+    bool register_state( t_state_id id, t_state state )
     {
+        if ( find_state( id ) != 0 )
+            return false;
+
         state_and_id<t_state_id, t_state> s;
         s.id = id;
         s.state = state;
         m_states.push_back( s );
+
+        return true;
     }
 
     state_and_id<t_state_id, t_state>* find_state( t_state_id id )

@@ -13,7 +13,7 @@
 * [Manipulators](#manipulators)
   * [Single-state manipulators](#single-state-manipulators)
   * [Stacked-state manipulators](#stacked-state-manipulators)
-* [Enter/Exit Policies](#enter-exit-policies)
+* [Enter/Exit Policies](#enterexit-policies)
 * [Examples](#examples)
 
 --------------------------------------------
@@ -42,7 +42,7 @@ State ID is any C++ type that uniquely identifies a state. In most cases, this i
 
 This is a type that represents a state of a state machine. It can be something simple, like an int, but in most cases, it will probably be a pointer to a state class that encapsulates behaviour for this state.
 
-State Type does not have a contract it should follow by default, but Enter/Exit Policy can impose such a contract on State Type (see [Enter/Exit Policies](#enter-exit-policies)).
+State Type does not have a contract it should follow by default, but Enter/Exit Policy can impose such a contract on State Type (see [Enter/Exit Policies](#enterexit-policies)).
 
 If State Type is a class or a struct, but not a pointer, it should be copyable.
 
@@ -111,7 +111,7 @@ This class do not provide any methods by itself, but instead serves as framework
 
 ## Registry
 
-[State Registry](state-registry) stores possible states for a state machine. It uses class **fsbb::state_and_id**:
+[State Registry](#state-registry) stores possible states for a state machine. It uses class **fsbb::state_and_id**:
 
 ```c++
 template
@@ -268,7 +268,7 @@ Queued manipulators place requested operations into a queue and execute them at 
 
 Combined manipulators provide both interfaces to allow for maximum flexibility.
 
-All state manipulators can be parametrized with an [Enter/Exit Policy](#enter-exit-policies) and a [Context](#context).
+All state manipulators can be parametrized with an [Enter/Exit Policy](#enterexit-policies) and a [Context](#context).
 
 ### Single-state manipulators
 

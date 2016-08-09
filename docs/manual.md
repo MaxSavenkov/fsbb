@@ -250,7 +250,7 @@ void for_all_states_from_top( t_functor& f )```**
 
 Applies functor f to all states, starting from the top of the stack.
 
-**```const current_states_vector& get_current_states() const```*
+**```const current_states_vector& get_current_states() const```**
 
 Returns the current set of states.
 
@@ -309,7 +309,8 @@ template
     typename t_on_enter_exit_policy = enter_exit_policy_default,
     typename t_context = void
 >
-class state_manipulator_single_queued_interface : public state_manipulator_single_queued_interface_base<t_state_id, t_state, t_on_enter_exit_policy, t_context>
+class state_manipulator_single_queued_interface : 
+    public state_manipulator_single_queued_interface_base<t_state_id, t_state, t_on_enter_exit_policy, t_context>
 {
 public:
     state_manipulator_single_queued_interface( t_impl& impl ) ;
@@ -368,3 +369,185 @@ Initializes manipulator interface with a manipulator implementation. The base [F
 **Methods:**
 
 Combined manipulator provides methods from both [immediate](#immediate-single-state-manipulator) and [queued](#Queued-single-state-manipulator) state manipulators.
+
+### Stacked-state manipulators
+
+#### Immediate stacked-state manipulator
+
+```c++
+template
+<
+    typename t_state_id,
+    typename t_state,
+    typename t_on_enter_exit_policy = enter_exit_policy_default,
+    typename t_context = void
+>
+class state_manipulator_stacked_immediate_interface
+{
+public:
+    state_manipulator_stacked_immediate_interface( t_impl& impl );
+
+    bool replace_top_state( t_state_id id, context_holder<t_context> ctx = context_holder<t_context>() );
+    bool push_state( t_state_id id, context_holder<t_context> ctx = context_holder<t_context>() );
+    bool insert_state( t_state_id id, size_t position, context_holder<t_context> ctx = context_holder<t_context>() );
+    bool pop_state( context_holder<t_context> ctx = context_holder<t_context>() );
+    bool remove_state( t_state_id id, context_holder<t_context> ctx = context_holder<t_context>() );
+    bool remove_state_and_all_above( t_state_id id, context_holder<t_context> ctx = context_holder<t_context>() );
+    void remove_all_states( context_holder<t_context> ctx = context_holder<t_context>() );
+};
+```
+
+**Constructors:**
+
+**```state_manipulator_stacked_immediate_interface( t_impl& impl )```**
+
+Initializes manipulator interface with a manipulator implementation. The base [FSM](#FSM) class takes care of this automatically.
+
+**Methods:**
+
+**```bool replace_top_state( t_state_id id, context_holder<t_context> ctx )```**
+
+Replaces the top state with a specified state. If the stack of states is empty, pushes specified state ontot he stack. If the specified state is not found or is already present in the stack, returns false.
+
+**```bool push_state( t_state_id id, context_holder<t_context> ctx )```**
+
+Pushes the specified state onto the stack. If the specified state is not found or is already present in the stack, returns false.
+
+**```bool insert_state( t_state_id id, size_t position, context_holder<t_context> ctx )```**
+
+Inserts the specified state into the stack at the specified position. If the specified state is not found or is already present in the stack, returns false. Also returns false if the position is out of bounds of the stack. Please note that position = 0 is the **bottom** of the stack!
+
+**```bool pop_state( context_holder<t_context> ctx )```**
+
+Removes the top state from the stack. If the stack is empty, returns false.
+
+**```bool remove_state( t_state_id id, context_holder<t_context> ctx )```**
+
+Removes the specified state from the stack. If the state is not present in the stack, returns false.
+
+**```bool remove_state_and_all_above( t_state_id id, context_holder<t_context> ctx )```**
+
+Removes the specified state and all states above it from the stack. If the state is not present in the stack, returns false.
+Removals will be effected from the top of the stack down to the specified state.
+
+**```void remove_all_states( context_holder<t_context> ctx )```**
+
+Removes all states from the stack. Removals will be effected from the top of the stack to the bottom.
+
+#### Queued stacked-state manipulator
+
+```c++
+template
+<
+    typename t_state_id,
+    typename t_state,
+    typename t_on_enter_exit_policy = enter_exit_policy_default,
+    typename t_context = void
+>
+class state_manipulator_stacked_queued_interface_base
+{
+public:
+    state_manipulator_stacked_queued_interface_base(
+        state_manipulator_stacked_immediate_interface<t_state_id, t_state, t_on_enter_exit_policy, t_context>& immediate_interface,
+        t_impl& impl 
+    );
+
+    void queue_push_state( t_state_id id );
+    void queue_pop_state();
+    void queue_remove_state( t_state_id id );
+    void queue_remove_state_and_all_above( t_state_id id );
+    void queue_remove_all_states();
+
+    void update( context_holder<t_context> ctx );
+};
+```
+
+Not all operations available in immediate manipulator are present in queued manipulator, because they might become highly unsafe. In particular, there is no **queued_insert_state** (because the position may become invalid) and no **replace_top_state**, because the top state might not be what you were expecting at the time of queueing.
+
+Also, unlike immediate manipulator, this interface's methods do not return anything, so there is no way to check if queued actions actually succeeded.
+
+**Constructors:**
+
+**```    state_manipulator_stacked_queued_interface_base(
+        state_manipulator_stacked_immediate_interface<t_state_id, t_state, t_on_enter_exit_policy, t_context>& immediate_interface,
+        t_impl& impl 
+    );```**
+
+Initializes manipulator interface with a manipulator implementation. The base [FSM](#FSM) class takes care of this automatically.
+
+**Methods:**
+
+**```void queue_push_state( t_state_id id )```**
+
+Queues an operation to push the specified state onto the stack.
+
+**```void queue_pop_state()```**
+
+Queues an operation to remove the top state from the stack.
+
+**```void queue_remove_state( t_state_id id )```**
+
+Queues an operation to remove the specified state from the stack.
+
+**```void queue_remove_state_and_all_above( t_state_id id )```**
+
+Queues an operation to remove the specified state and all states above it from the stack.
+Removals will be effected from the top of the stack down to the specified state.
+
+**```void queue_remove_all_states()```**
+
+Queues an operation to remove all states from the stack.
+Removals will be effected from the top of the stack to the bottom.
+
+**```void update( context_holder<t_context> ctx )```**
+
+Applies queued operations. Specified context will be used for all queued operations if non-void context is specified.
+
+#### Combined stacked-state manipulator
+
+```
+template
+<
+    typename t_state_id,
+    typename t_state,
+    typename t_on_enter_exit_policy = enter_exit_policy_default,
+    typename t_context = void
+>
+class state_manipulator_stacked_combined_interface :
+    public state_manipulator_stacked_immediate_interface<t_state_id, t_state, t_on_enter_exit_policy, t_context>,
+    public state_manipulator_stacked_queued_interface<t_state_id, t_state, t_on_enter_exit_policy, t_context>
+{
+public:
+    state_manipulator_stacked_combined_interface( t_impl& impl ) ;
+};
+```
+
+**Constructors:**
+
+**```state_manipulator_stacked_combined_interface( t_impl& impl )```**
+
+Initializes manipulator interface with a manipulator implementation. The base [FSM](#FSM) class takes care of this automatically.
+
+**Methods:**
+
+Combined manipulator provides methods from both [immediate](#immediate-stacked-state-manipulator) and [queued](#queued-stacked-state-manipulator) state manipulators.
+
+## Policies
+
+Enter/Exit policies are implemented as a class which provides two static functions:
+
+```c++
+    template<typename t_state_id, typename t_state, typename t_context = void>
+    static void on_enter( state_and_id<t_state_id, t_state>& state, context_holder<t_context>& ctx ) {}
+
+    template<typename t_state_id, typename t_state, typename t_context = void>
+    static void on_exit( state_and_id<t_state_id, t_state>& state, context_holder<t_context>& ctx ) {}
+```
+
+FSBB provides the following default policies:
+
+* **enter_exit_policy_default** - does nothing
+* **enter_exit_policy_notify** - calls **on_enter** and **on_exit** methods of the state when the state is entered/exited (in single-state machines), or placed/removed from the stack (in stacked-state machines). The state is required to have a pointer type in for this policy to work. Also, if a non-void context is provided, these methods should accept a parameter of this type.
+* **enter_exit_policy_call** - calls **operator()** of the state when the state is entered (in single-state machines), or placed onto the stack (in stacked-state machines). Does not call anything when the state is exited/removed from the stack. The state is not required to have a pointer type, and in fact can be a std::function. If a non-void context is provided, operator() should accept a parameter of this type.
+
+## Examples

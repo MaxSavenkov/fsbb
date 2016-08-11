@@ -27,6 +27,8 @@ template
 class state_registry
 {
 public:
+    typedef std::vector<state_and_id<t_state_id, t_state>> states_vector;
+
     bool register_state( t_state_id id, t_state state )
     {
         if ( find_state( id ) != 0 )
@@ -51,8 +53,10 @@ public:
         return 0;
     }
 
+    states_vector & get_states() { return m_states; }
+
 protected:
-    std::vector<state_and_id<t_state_id, t_state>> m_states;
+    states_vector m_states;
 };
 
 //----------------------------------------------------------------

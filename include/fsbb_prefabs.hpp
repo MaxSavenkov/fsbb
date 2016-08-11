@@ -70,6 +70,31 @@ class fsm_single_immediate_enter_exit
 
 /*
     Current state : single
+    Switching     : queued
+    Reactions     : call on_enter/on_exit functions of the state. The state in this case must be
+                    a pointer type which provides these two functions.
+*/
+template
+<
+    typename t_state_id,
+    typename t_state,
+    typename t_context = void
+>
+class fsm_single_queued_enter_exit
+    : public fsm
+    <
+        t_state_id,
+        t_state,
+        state_container_single_interface<t_state_id, t_state>,
+        state_manipulator_single_queued_interface<t_state_id, t_state, enter_exit_policy_notify, t_context>
+    >
+{
+};
+
+//----------------------------------------------------------------
+
+/*
+    Current state : single
     Switching     : combined
     Reactions     : call on_enter/on_exit functions of the state. The state in this case must be
                     a pointer type which provides these two functions.
@@ -90,6 +115,7 @@ class fsm_single_combined_enter_exit
     >
 {
 };
+
 //----------------------------------------------------------------
 
 /*
@@ -134,6 +160,31 @@ class fsm_stacked_immediate_enter_exit
         t_state,
         state_container_stacked_interface<t_state_id, t_state>,
         state_manipulator_stacked_immediate_interface<t_state_id, t_state, enter_exit_policy_notify, t_context >
+    >
+{
+};
+
+//----------------------------------------------------------------
+
+/*
+    Current state : stack
+    Switching     : queued
+    Reactions     : call on_enter/on_exit functions of the state. The state in this case must be
+                    a pointer type which provides these two functions.
+*/
+template
+<
+    typename t_state_id,
+    typename t_state,
+    typename t_context = void
+>
+class fsm_stacked_queued_enter_exit
+    : public fsm
+    <
+        t_state_id,
+        t_state,
+        state_container_stacked_interface<t_state_id, t_state>,
+        state_manipulator_stacked_queued_interface<t_state_id, t_state, enter_exit_policy_notify, t_context>
     >
 {
 };

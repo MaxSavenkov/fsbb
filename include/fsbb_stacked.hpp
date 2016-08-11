@@ -36,7 +36,7 @@ public:
     t_state get_top_state_id() const 
     { 
         state_container_stacked_impl<t_state_id, t_state>::current_states_vector& current_states = m_impl.m_current_states;
-        return !current_states.empty() ? current_states.back()->id : t_state_id; 
+        return !current_states.empty() ? current_states.back()->id : t_state_id(); 
     }
     t_state get_top_state() const
     { 

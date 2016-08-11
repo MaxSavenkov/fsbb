@@ -234,7 +234,7 @@ struct state_manipulator_single_combined_impl :
             t_state_container_impl& state_container_impl, 
             state_registry<t_state_id, t_state>& state_registry
         ) 
-        : state_manipulator_single_immediate_impl( state_container_impl, state_registry )
+        : state_manipulator_single_immediate_impl<t_state_id, t_state>( state_container_impl, state_registry )
         , state_manipulator_single_queued_impl<t_state_id, t_state>( state_container_impl, state_registry )
     {}
 };

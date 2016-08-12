@@ -27,7 +27,7 @@ template
 class state_registry
 {
 public:
-    typedef std::vector<state_and_id<t_state_id, t_state>> states_vector;
+    typedef std::vector<state_and_id<t_state_id, t_state> > states_vector;
 
     bool register_state( t_state_id id, t_state state )
     {

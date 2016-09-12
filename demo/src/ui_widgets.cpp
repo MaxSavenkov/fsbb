@@ -79,7 +79,7 @@ void widget_renderer::draw_text(uint x,uint y,const char *text
         return;
     
     //glColor4f(0,0,0,1);
-    nya_render::set_color(1.0f,1.0f,1.0f,1.0f);
+    nya_render::set_clear_color(1.0f,1.0f,1.0f,1.0f);
     
     m_text_shader.bind();
     m_font_tex->bind(0);
@@ -229,7 +229,7 @@ void widget_renderer::draw_rect(nya_ui::rect &r,rect_style &s)
 
     if(s.solid)
     {
-        nya_render::set_color(s.solid_color.r,s.solid_color.g,
+        nya_render::set_clear_color(s.solid_color.r,s.solid_color.g,
                               s.solid_color.b,s.solid_color.a);
         
         m_rect_vbo.set_element_type(nya_render::vbo::triangle_strip);
@@ -240,7 +240,7 @@ void widget_renderer::draw_rect(nya_ui::rect &r,rect_style &s)
     if(s.border)
     {
         m_rect_vbo.bind_indices();
-        nya_render::set_color(s.border_color.r,s.border_color.g,
+        nya_render::set_clear_color(s.border_color.r,s.border_color.g,
                               s.border_color.b,s.border_color.a);
         
         m_rect_vbo.set_element_type(nya_render::vbo::line_strip);

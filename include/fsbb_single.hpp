@@ -158,7 +158,7 @@ public:
         return true;
     }
 
-    void update( context_holder<t_context> ctx = context_holder<t_context>() )
+    void update( context_holder<t_context> ctx )
     {
         if ( !m_impl.m_next_state )
             return;
@@ -167,6 +167,12 @@ public:
         m_impl.m_next_state = 0;
 
         m_immediate_interface.change_state_immediate( next_state->id, ctx );        
+    }
+
+    template<typename T = t_context>
+    typename std::enable_if<std::is_void<T>::value, void>::type update()
+    {
+        update(context_holder<void>());
     }
 
 protected:

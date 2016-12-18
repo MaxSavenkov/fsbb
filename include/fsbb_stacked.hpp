@@ -294,7 +294,7 @@ public:
         m_impl.m_queued_actions.push_back( t_impl::queued_action( t_impl::queued_action::remove_all, t_state_id() ) );
     }
 
-    void update( context_holder<t_context> ctx = context_holder<t_context>() )
+    void update(context_holder<t_context> ctx)
     {
         for ( std::vector<t_impl::queued_action>::iterator iter = m_impl.m_queued_actions.begin();
               iter != m_impl.m_queued_actions.end();
@@ -325,6 +325,12 @@ public:
         }
 
         m_impl.m_queued_actions.clear();
+    }
+
+    template<typename T = t_context>
+    typename std::enable_if<std::is_void<T>::value, void>::type update()
+    {
+        update(context_holder<void>());
     }
 
 protected:

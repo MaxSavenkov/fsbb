@@ -130,7 +130,7 @@ public:
         if ( new_state == 0 )
             return false;
 
-        state_container_stacked_impl<t_state_id, t_state>::current_states_vector::iterator iter;
+        typename state_container_stacked_impl<t_state_id, t_state>::current_states_vector::iterator iter;
         for( iter = current_states.begin(); iter != current_states.end(); ++iter )
             if ( (*iter)->id == id )
                 break;
@@ -158,7 +158,7 @@ public:
     {
         typename state_container_stacked_impl<t_state_id, t_state>::current_states_vector& current_states = m_impl.m_state_container_impl.m_current_states;
 
-        state_container_stacked_impl<t_state_id, t_state>::current_states_vector::iterator iter;
+        typename state_container_stacked_impl<t_state_id, t_state>::current_states_vector::iterator iter;
         for( iter = current_states.begin(); iter != current_states.end(); ++iter )
             if ( (*iter)->id == id )
                 break;
@@ -177,7 +177,7 @@ public:
     {
         typename state_container_stacked_impl<t_state_id, t_state>::current_states_vector& current_states = m_impl.m_state_container_impl.m_current_states;
 
-        state_container_stacked_impl<t_state_id, t_state>::current_states_vector::iterator iter;
+        typename state_container_stacked_impl<t_state_id, t_state>::current_states_vector::iterator iter;
         for( iter = current_states.begin(); iter != current_states.end(); ++iter )
             if ( (*iter)->id == id )
                 break;

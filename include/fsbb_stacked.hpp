@@ -185,7 +185,7 @@ public:
         if ( iter == current_states.end() )
             return false;
 
-        for( state_container_stacked_impl<t_state_id, t_state>::current_states_vector::reverse_iterator riter = current_states.rbegin(); riter.base() != iter; ++riter )
+        for( typename state_container_stacked_impl<t_state_id, t_state>::current_states_vector::reverse_iterator riter = current_states.rbegin(); riter.base() != iter; ++riter )
             t_on_enter_exit_policy::on_exit( *(*riter), ctx );
 
         current_states.erase( iter, current_states.end() );
@@ -198,7 +198,7 @@ public:
         typename state_container_stacked_impl<t_state_id, t_state>::current_states_vector& current_states = m_impl.m_state_container_impl.m_current_states;
 
         std::vector<t_state_id> states_to_remove;
-        for ( state_container_stacked_impl<t_state_id, t_state>::current_states_vector::reverse_iterator iter = current_states.rbegin(); iter != current_states.rend(); ++iter )
+        for ( typename state_container_stacked_impl<t_state_id, t_state>::current_states_vector::reverse_iterator iter = current_states.rbegin(); iter != current_states.rend(); ++iter )
             states_to_remove.push_back( (*iter)->id );
 
         for ( size_t i = 0; i < states_to_remove.size(); ++i )
@@ -268,7 +268,7 @@ public:
 
     void queue_push_state( t_state_id id )
     {
-        m_impl.m_queued_actions.push_back( t_impl::queued_action( t_impl::queued_action::push, id ) );
+        m_impl.m_queued_actions.push_back( typename t_impl::queued_action( t_impl::queued_action::push, id ) );
     }
 
     // It would dangrous to allow this, since position can become invalid because of other queued actions
@@ -276,27 +276,27 @@ public:
 
     void queue_pop_state()
     {
-        m_impl.m_queued_actions.push_back( t_impl::queued_action( t_impl::queued_action::pop, t_state_id() ) );
+        m_impl.m_queued_actions.push_back( typename t_impl::queued_action( t_impl::queued_action::pop, t_state_id() ) );
     }
 
     void queue_remove_state( t_state_id id )
     {
-        m_impl.m_queued_actions.push_back( t_impl::queued_action( t_impl::queued_action::remove, id ) );
+        m_impl.m_queued_actions.push_back( typename t_impl::queued_action( t_impl::queued_action::remove, id ) );
     }
 
     void queue_remove_state_and_all_above( t_state_id id )
     {
-        m_impl.m_queued_actions.push_back( t_impl::queued_action( t_impl::queued_action::remove_and_above, id ) );
+        m_impl.m_queued_actions.push_back( typename t_impl::queued_action( t_impl::queued_action::remove_and_above, id ) );
     }
 
     void queue_remove_all_states()
     {
-        m_impl.m_queued_actions.push_back( t_impl::queued_action( t_impl::queued_action::remove_all, t_state_id() ) );
+        m_impl.m_queued_actions.push_back( typename t_impl::queued_action( t_impl::queued_action::remove_all, t_state_id() ) );
     }
 
     void update(context_holder<t_context> ctx)
     {
-        for ( std::vector<t_impl::queued_action>::iterator iter = m_impl.m_queued_actions.begin();
+        for ( typename std::vector<typename t_impl::queued_action>::iterator iter = m_impl.m_queued_actions.begin();
               iter != m_impl.m_queued_actions.end();
               ++iter )
         {
@@ -398,7 +398,7 @@ struct state_manipulator_stacked_combined_impl :
             t_state_container_impl& state_container_impl, 
             state_registry<t_state_id, t_state>& state_registry
         ) 
-        : state_manipulator_stacked_immediate_impl( state_container_impl, state_registry )
+        : state_manipulator_stacked_immediate_impl<t_state_id, t_state>( state_container_impl, state_registry )
         , state_manipulator_stacked_queued_impl<t_state_id, t_state>( state_container_impl, state_registry )
     {}
 };

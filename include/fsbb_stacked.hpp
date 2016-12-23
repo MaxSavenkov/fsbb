@@ -35,19 +35,19 @@ public:
 
     t_state get_top_state_id() const 
     { 
-        state_container_stacked_impl<t_state_id, t_state>::current_states_vector& current_states = m_impl.m_current_states;
+        typename state_container_stacked_impl<t_state_id, t_state>::current_states_vector& current_states = m_impl.m_current_states;
         return !current_states.empty() ? current_states.back()->id : t_state_id(); 
     }
     t_state get_top_state() const
     { 
-        state_container_stacked_impl<t_state_id, t_state>::current_states_vector& current_states = m_impl.m_current_states;
+        typename state_container_stacked_impl<t_state_id, t_state>::current_states_vector& current_states = m_impl.m_current_states;
         return !current_states.empty() ? current_states.back()->state : 0; 
     }
 
     template<typename t_functor>
     void for_all_states_from_bottom( t_functor& f )
     {
-        state_container_stacked_impl<t_state_id, t_state>::current_states_vector& current_states = m_impl.m_current_states;
+        typename state_container_stacked_impl<t_state_id, t_state>::current_states_vector& current_states = m_impl.m_current_states;
 
         for( unsigned int i = 0; i < current_states.size(); ++i )
             f( current_states[i].id, current_states[i].state );
@@ -56,7 +56,7 @@ public:
     template<typename t_functor>
     void for_all_states_from_top( t_functor& f )
     {
-        state_container_stacked_impl<t_state_id, t_state>::current_states_vector& current_states = m_impl.m_current_states;
+        typename state_container_stacked_impl<t_state_id, t_state>::current_states_vector& current_states = m_impl.m_current_states;
 
         for( unsigned int i = current_states.size()-1; i >= 0; --i )
             f( current_states[i].id, current_states[i].state );
@@ -115,14 +115,14 @@ public:
 
     bool push_state( t_state_id id, context_holder<t_context> ctx = context_holder<t_context>() )
     {
-        state_container_stacked_impl<t_state_id, t_state>::current_states_vector& current_states = m_impl.m_state_container_impl.m_current_states;
+        typename state_container_stacked_impl<t_state_id, t_state>::current_states_vector& current_states = m_impl.m_state_container_impl.m_current_states;
 
         return insert_state( id, current_states.size(), ctx );
     }
 
     bool insert_state( t_state_id id, size_t position, context_holder<t_context> ctx = context_holder<t_context>() )
     {
-        state_container_stacked_impl<t_state_id, t_state>::current_states_vector& current_states = m_impl.m_state_container_impl.m_current_states;
+        typename state_container_stacked_impl<t_state_id, t_state>::current_states_vector& current_states = m_impl.m_state_container_impl.m_current_states;
         if ( current_states.begin() + position > current_states.end() )
             return false;
 
@@ -146,7 +146,7 @@ public:
 
     bool pop_state( context_holder<t_context> ctx = context_holder<t_context>() )
     {
-        state_container_stacked_impl<t_state_id, t_state>::current_states_vector& current_states = m_impl.m_state_container_impl.m_current_states;
+        typename state_container_stacked_impl<t_state_id, t_state>::current_states_vector& current_states = m_impl.m_state_container_impl.m_current_states;
 
         if ( current_states.empty() )
             return false;
@@ -156,7 +156,7 @@ public:
 
     bool remove_state( t_state_id id, context_holder<t_context> ctx = context_holder<t_context>() )
     {
-        state_container_stacked_impl<t_state_id, t_state>::current_states_vector& current_states = m_impl.m_state_container_impl.m_current_states;
+        typename state_container_stacked_impl<t_state_id, t_state>::current_states_vector& current_states = m_impl.m_state_container_impl.m_current_states;
 
         state_container_stacked_impl<t_state_id, t_state>::current_states_vector::iterator iter;
         for( iter = current_states.begin(); iter != current_states.end(); ++iter )
@@ -175,7 +175,7 @@ public:
 
     bool remove_state_and_all_above( t_state_id id, context_holder<t_context> ctx = context_holder<t_context>() )
     {
-        state_container_stacked_impl<t_state_id, t_state>::current_states_vector& current_states = m_impl.m_state_container_impl.m_current_states;
+        typename state_container_stacked_impl<t_state_id, t_state>::current_states_vector& current_states = m_impl.m_state_container_impl.m_current_states;
 
         state_container_stacked_impl<t_state_id, t_state>::current_states_vector::iterator iter;
         for( iter = current_states.begin(); iter != current_states.end(); ++iter )
@@ -195,7 +195,7 @@ public:
 
     void remove_all_states( context_holder<t_context> ctx = context_holder<t_context>() )
     {
-        state_container_stacked_impl<t_state_id, t_state>::current_states_vector& current_states = m_impl.m_state_container_impl.m_current_states;
+        typename state_container_stacked_impl<t_state_id, t_state>::current_states_vector& current_states = m_impl.m_state_container_impl.m_current_states;
 
         std::vector<t_state_id> states_to_remove;
         for ( state_container_stacked_impl<t_state_id, t_state>::current_states_vector::reverse_iterator iter = current_states.rbegin(); iter != current_states.rend(); ++iter )

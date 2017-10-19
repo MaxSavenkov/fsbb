@@ -79,4 +79,4 @@ Constructing your own FSMs might seem a little daunting from this example, but i
 
 ## Documentation
 
-Further documentation could be found at: [docs/index.html](docs/index.html)
+Further documentation could be found at: [docs/manual.md](docs/manual.md)

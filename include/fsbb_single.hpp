@@ -32,7 +32,7 @@ public:
 
     state_container_single_interface( t_impl& impl ) : m_impl( impl ) {}
 
-    t_state get_current_state_id() const { return m_impl.m_current_state ? m_impl.m_current_state->id : t_state_id(); }
+    t_state_id get_current_state_id() const { return m_impl.m_current_state ? m_impl.m_current_state->id : t_state_id(); }
     const t_state get_current_state() const { return m_impl.m_current_state ? m_impl.m_current_state->state : 0; }
 
 protected:

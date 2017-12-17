@@ -49,7 +49,7 @@ public:
     {
         typename state_container_stacked_impl<t_state_id, t_state>::current_states_vector& current_states = m_impl.m_current_states;
 
-        for( unsigned int i = 0; i < current_states.size(); ++i )
+        for( size_t i = 0; i < current_states.size(); ++i )
             f( current_states[i].id, current_states[i].state );
     }
 
@@ -58,7 +58,7 @@ public:
     {
         typename state_container_stacked_impl<t_state_id, t_state>::current_states_vector& current_states = m_impl.m_current_states;
 
-        for( unsigned int i = current_states.size()-1; i >= 0; --i )
+        for( int i = (int)current_states.size()-1; i >= 0; --i )
             f( current_states[i].id, current_states[i].state );
     }
 
